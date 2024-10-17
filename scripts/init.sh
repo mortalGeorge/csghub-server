@@ -136,11 +136,14 @@ service cron restart
 echo "Done."
 
 echo "Database setup..."
-
+echo "dsn:$STARHUB_DATABASE_DSN"
 echo "Migration init"
-/starhub-bin/starhub migration init
+#/starhub-bin/starhub migration init
+./csghub-server migration init
 echo "Migration migrate"
-/starhub-bin/starhub migration migrate
+#/starhub-bin/starhub migration migrate
+./csghub-server migration migrate
 echo "Start server..."
-/starhub-bin/starhub start server
+#/starhub-bin/starhub start server
+./csghub-server start server
 

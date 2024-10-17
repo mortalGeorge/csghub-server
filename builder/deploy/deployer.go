@@ -235,7 +235,8 @@ func (d *deployer) refreshStatus() {
 		status, err := d.ir.StatusAll(ctxTimeout)
 		cancel()
 		if err != nil {
-			slog.Error("refresh status all failed", slog.Any("error", err))
+			//todo temporary give up
+			//slog.Error("refresh status all failed", slog.Any("error", err))
 		} else {
 			slog.Debug("status all cached", slog.Any("status", d.runnerStatuscache))
 			d.runnerStatuscache = status
