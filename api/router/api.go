@@ -119,7 +119,11 @@ func NewRouter(config *config.Config, enableSwagger bool) (*gin.Engine, error) {
 	// Model routes
 	createModelRoutes(config, apiGroup, needAPIKey, modelHandler, repoCommonHandler)
 	// Dataset routes
-	createDatasetRoutes(config, apiGroup, dsHandler, repoCommonHandler)
+	clabelHandler, err := handler.NewClabelHandler(config)
+	if err != nil {
+		return nil, err
+	}
+	createDatasetRoutes(config, apiGroup, dsHandler, repoCommonHandler, clabelHandler)
 
 	codeHandler, err := handler.NewCodeHandler(config)
 	if err != nil {
@@ -465,7 +469,7 @@ func createModelRoutes(config *config.Config, apiGroup *gin.RouterGroup, needAPI
 	}
 }
 
-func createDatasetRoutes(config *config.Config, apiGroup *gin.RouterGroup, dsHandler *handler.DatasetHandler, repoCommonHandler *handler.RepoHandler) {
+func createDatasetRoutes(config *config.Config, apiGroup *gin.RouterGroup, dsHandler *handler.DatasetHandler, repoCommonHandler *handler.RepoHandler, clabelHandler *handler.ClabelHandler) {
 	datasetsGroup := apiGroup.Group("/datasets")
 	{
 		datasetsGroup.POST("", dsHandler.Create)
@@ -497,6 +501,8 @@ func createDatasetRoutes(config *config.Config, apiGroup *gin.RouterGroup, dsHan
 		datasetsGroup.PUT("/:namespace/:name/mirror", middleware.RepoType(types.DatasetRepo), repoCommonHandler.UpdateMirror)
 		datasetsGroup.DELETE("/:namespace/:name/mirror", middleware.RepoType(types.DatasetRepo), repoCommonHandler.DeleteMirror)
 		datasetsGroup.POST("/:namespace/:name/mirror/sync", middleware.RepoType(types.DatasetRepo), repoCommonHandler.SyncMirror)
+		datasetsGroup.POST("/:namespace/:name/clabel/*file_path", middleware.RepoType(types.DatasetRepo), clabelHandler.UpsertClabel)
+		datasetsGroup.GET("/:namespace/:name/clabel/*file_path", middleware.RepoType(types.DatasetRepo), clabelHandler.ClabelInfo)
 
 		// mirror from SaaS, only on-premises available
 		if !config.Saas {
