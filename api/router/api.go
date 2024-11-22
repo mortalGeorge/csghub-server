@@ -504,6 +504,7 @@ func createDatasetRoutes(config *config.Config, apiGroup *gin.RouterGroup, dsHan
 		datasetsGroup.POST("/:namespace/:name/mirror/sync", middleware.RepoType(types.DatasetRepo), repoCommonHandler.SyncMirror)
 		datasetsGroup.POST("/:namespace/:name/clabel/*file_path", middleware.RepoType(types.DatasetRepo), clabelHandler.UpsertClabel)
 		datasetsGroup.GET("/:namespace/:name/clabel/*file_path", middleware.RepoType(types.DatasetRepo), clabelHandler.ClabelInfo)
+		datasetsGroup.GET("/cmcc/files", clabelHandler.IndexFile)
 
 		// mirror from SaaS, only on-premises available
 		if !config.Saas {

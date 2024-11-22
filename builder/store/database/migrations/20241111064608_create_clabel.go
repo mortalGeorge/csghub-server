@@ -36,6 +36,9 @@ type Clabel struct {
 	Repository     *database.Repository `bun:"rel:belongs-to,join:repository_id=id" json:"repository"`
 	Path           string               `bun:",notnull" json:"path"`
 	Ref            string               `bun:",notnull" json:"ref"`
+	FileName       string               `bun:",notnull" json:"file_name"`
+	RepoNamespace  string               `bun:",notnull" json:"repo_namespace"`
+	RepoName       string               `bun:",notnull" json:"repo_name"`
 	Label          string               `bun:",notnull" json:"label"`
 	AnnotationPath string               `json:"annotation_path"`
 	times
